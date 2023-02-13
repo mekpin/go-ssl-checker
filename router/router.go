@@ -29,4 +29,8 @@ func Router(app *gin.Engine) {
 		checkGroup.GET("/list", controller.SSLList)
 	}
 
+	manifestGroup := baseGroup.Group("/manifest")
+	{
+		manifestGroup.GET("/list", controller.ListManifest)
+	}
 }

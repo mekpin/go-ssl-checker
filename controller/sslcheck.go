@@ -44,9 +44,9 @@ func SSLCheck(c *gin.Context) {
 	fmt.Println(expirydomain1)
 
 	c.JSON(http.StatusOK, gin.H{
-		"domain-name":           Domain1,
-		"ssl-expiry-date":       expirydomain1,
-		"expiry-days-countdown": int64(delta1.Hours() / 24),
+		"domain_name":            Domain1,
+		"ssl_expiry_date":        expirydomain1,
+		"remaining_days_expired": int64(delta1.Hours() / 24),
 	})
 }
 

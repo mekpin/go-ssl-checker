@@ -15,12 +15,20 @@ type common struct {
 	Alldomainport string `env:"DOMAIN_PORT" envDefault:"443"`
 }
 
+type manifest struct {
+	InventoryPath string `env:"MANIFEST_PATH" envDefault:"inventory/manifest.yaml"`
+}
+
 var (
-	Common common
+	Common   common
+	Manifest manifest
 )
 
 func init() {
 	env.Parse(&Common)
+	env.Parse(&Manifest)
 
 	log.Debug().Interface("common", Common).Send()
+	log.Debug().Interface("manifest", Manifest).Send()
+
 }
