@@ -1,7 +1,7 @@
 package router
 
 import (
-	"go-project-template/controller"
+	"go-ssl-checker/controller"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -19,12 +19,14 @@ func Router(app *gin.Engine) {
 	app.GET("/", controller.BaseHealthcheck)
 
 	app.GET("/health", controller.Healthcheck)
+	app.GET("/domainlist", controller.DomainList)
 
 	baseGroup := app.Group("/")
 
 	checkGroup := baseGroup.Group("/check")
 	{
-		checkGroup.GET("/list", controller.ListTest)
+		checkGroup.GET("/", controller.SSLCheck)
+		checkGroup.GET("/list", controller.SSLList)
 	}
 
 }

@@ -1,4 +1,4 @@
-module go-project-template
+module go-ssl-checker
 
 go 1.19
 

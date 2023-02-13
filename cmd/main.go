@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
-	"go-project-template/config"
-	"go-project-template/router"
+	"go-ssl-checker/config"
+	"go-ssl-checker/router"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
