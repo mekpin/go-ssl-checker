@@ -1,0 +1,11 @@
+- domain_name: google.com
+  domain_port: 443
+
+- domain_name: facebook.com
+  domain_port: 443
+
+- domain_name: detik.com
+  domain_port: 443
+
+- domain_name: youtube.com
+  domain_port: 443
