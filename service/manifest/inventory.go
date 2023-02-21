@@ -31,8 +31,6 @@ func ParseInventory(mask bool) ([]model.Inventory, error) {
 	// 			Domainport: v.Domainport,
 	// 		}
 	// 	} else {
-	// 		// fmt.Printf("domain_name", ":", "%s", list[v.Domainname])
-	// 		// fmt.Printf("domain_port", ":", "%s", list[v.Domainport])
 	// 		list[v.Domainname] = model.Inventory{
 	// 			Domainname: v.Domainname,
 	// 			Domainport: v.Domainport,
