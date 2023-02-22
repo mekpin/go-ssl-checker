@@ -1,0 +1,68 @@
+{
+	"blocks": [
+		{
+			"type": "section",
+			"text": {
+				"type": "mrkdwn",
+				"text": "the SSL checker are sucessfully done checking sir! here are the result :"
+			}
+		},
+		{
+			"type": "divider"
+		},
+		{
+			"type": "section",
+			"text": {
+				"type": "mrkdwn",
+				"text": "https://pinjammodal.id | 10 days remaining"
+			},
+			"accessory": {
+				"type": "button",
+				"text": {
+					"type": "plain_text",
+					"text": "Click untuk cek WOY!",
+					"emoji": true
+				},
+				"value": "click_me_123",
+				"url": "https://pinjammodal.id",
+				"action_id": "button-action"
+			}
+		},
+		{
+			"type": "section",
+			"text": {
+				"type": "mrkdwn",
+				"text": "https://api.pinjammodal.id | 10 days remaining <@U04BSDUFAJE>"
+			},
+			"accessory": {
+				"type": "button",
+				"text": {
+					"type": "plain_text",
+					"text": "Click untuk cek WOY!",
+					"emoji": true
+				},
+				"value": "click_me_123",
+				"url": "https://pinjammodal.id",
+				"action_id": "button-action"
+			}
+		},
+		{
+			"type": "section",
+			"text": {
+				"type": "mrkdwn",
+				"text": "https://wiki.rockstarview.com | 10 days remaining"
+			},
+			"accessory": {
+				"type": "button",
+				"text": {
+					"type": "plain_text",
+					"text": "Click untuk cek WOY!",
+					"emoji": true
+				},
+				"value": "click_me_123",
+				"url": "https://pinjammodal.id",
+				"action_id": "button-action"
+			}
+		}
+	]
+}

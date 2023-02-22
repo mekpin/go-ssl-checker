@@ -4,10 +4,15 @@ import (
 	"fmt"
 	"go-ssl-checker/config"
 	"go-ssl-checker/router"
+	"go-ssl-checker/service/cron"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
+
+func init() {
+	cron.Routine()
+}
 
 func main() {
 
@@ -19,7 +24,6 @@ func main() {
 		Addr:    fmt.Sprintf(":%v", config.Common.Port),
 		Handler: app,
 	}
-
 	srv.ListenAndServe()
 
 }

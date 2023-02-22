@@ -5,6 +5,6 @@ import (
 	"go-ssl-checker/config"
 )
 
-func RemindUpdate(c string) {
-	fmt.Println("sending slack notification for domain : " + c + " cause it hit the threshold of " + config.Common.Threshold + " days")
+func RemindUpdate(alert string) {
+	fmt.Println("sending slack notification for domain : " + alert + " cause it hit the threshold of " + config.Common.Threshold + " days")
 }
