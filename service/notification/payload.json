@@ -14,7 +14,7 @@
 			"type": "section",
 			"text": {
 				"type": "mrkdwn",
-				"text": "https://pinjammodal.id | 10 days remaining"
+				"text": "https://google.com | 10 days remaining"
 			},
 			"accessory": {
 				"type": "button",
@@ -24,7 +24,7 @@
 					"emoji": true
 				},
 				"value": "click_me_123",
-				"url": "https://pinjammodal.id",
+				"url": "https://google.com",
 				"action_id": "button-action"
 			}
 		},
@@ -32,7 +32,7 @@
 			"type": "section",
 			"text": {
 				"type": "mrkdwn",
-				"text": "https://api.pinjammodal.id | 10 days remaining <@U04BSDUFAJE>"
+				"text": "https://facebook.com | 10 days remaining <@U04BSDUFAJE>"
 			},
 			"accessory": {
 				"type": "button",
@@ -42,7 +42,7 @@
 					"emoji": true
 				},
 				"value": "click_me_123",
-				"url": "https://pinjammodal.id",
+				"url": "https://facebook.com",
 				"action_id": "button-action"
 			}
 		},
@@ -50,7 +50,7 @@
 			"type": "section",
 			"text": {
 				"type": "mrkdwn",
-				"text": "https://wiki.rockstarview.com | 10 days remaining"
+				"text": "https://wikipedia.com | 10 days remaining"
 			},
 			"accessory": {
 				"type": "button",
@@ -60,7 +60,7 @@
 					"emoji": true
 				},
 				"value": "click_me_123",
-				"url": "https://pinjammodal.id",
+				"url": "https://wikipedia.com",
 				"action_id": "button-action"
 			}
 		}
