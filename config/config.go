@@ -9,7 +9,7 @@ type common struct {
 	Port          string `env:"PORT" envDefault:"3300"`
 	Alldomainport string `env:"DOMAIN_PORT" envDefault:"443"`
 	Threshold     string `env:"THRESHOLD" envDefault:"25"`
-	Croninterval  string `env:"THRESHOLD" envDefault:"daily"`
+	Croninterval  string `env:"CRON_INTERVAL" envDefault:"daily"`
 }
 
 type manifest struct {
