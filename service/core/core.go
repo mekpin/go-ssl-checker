@@ -13,8 +13,10 @@ import (
 )
 
 func SSLExpireCheck(manifests []model.Inventory) map[string]model.Expiry_data {
+	slack := notification.New("Job: the SSL checker are sucessfully done checking sir! here are the result :") // init slack notification
 	report := 0
 	list := make(map[string]model.Expiry_data)
+	// var dataset []Data_inventory
 
 	for _, v := range manifests {
 		//debug domain name
@@ -52,15 +54,26 @@ func SSLExpireCheck(manifests []model.Inventory) map[string]model.Expiry_data {
 			notification.RemindUpdate(v.Domainname)
 			report = report + 1
 		}
-		list["tes"] = model.Expiry_data{
+		list[v.Domainname] = model.Expiry_data{
 			Domainname:    v.Domainname,
 			Expireddate:   expireddate,
 			Remainingdays: deltainteger,
 		}
 
+		//nyimpen data ke formatting struct
+		// input := model.Expiry_data{
+		// 	Domainname:    v.Domainname,
+		// 	Expireddate:   expireddate,
+		// 	Remainingdays: deltainteger,
+		// }
+
+		// dataset.
+
 	}
+	slack.SetStatus(nil).ReportCheck(manifests).Send()
 
 	fmt.Printf("we got %v reports of near expired domain \n", report)
+
 	return list
 
 }

@@ -10,6 +10,7 @@ type common struct {
 	Alldomainport string `env:"DOMAIN_PORT" envDefault:"443"`
 	Threshold     string `env:"THRESHOLD" envDefault:"25"`
 	Croninterval  string `env:"CRON_INTERVAL" envDefault:"daily"`
+	Slackwebhook  string `env:"SLACK_WEBHOOK" envDefault:""`
 }
 
 type manifest struct {

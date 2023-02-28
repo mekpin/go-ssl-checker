@@ -5,3 +5,8 @@ type Expiry_data struct {
 	Expireddate   string `json:"expired_date"`
 	Remainingdays int    `json:"remaining_days"`
 }
+
+type Data_inventory struct {
+	Id       int           `json:"id"`
+	Datapool []Expiry_data `json:"data_pool,omitempty"`
+}
