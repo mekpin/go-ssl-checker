@@ -128,7 +128,7 @@ func (s *SlackRequest) SetStatus(err error) *SlackRequest {
 }
 
 // mandatory, third position
-func (s *SlackRequest) ReportCheck(manifests []model.Inventory) *SlackRequest {
+func (s *SlackRequest) ReportCheck(manifests []model.ExpiryData) *SlackRequest {
 	InformationBlock := Block{
 		Type: "section",
 		Fields: []Field{
@@ -151,11 +151,9 @@ func (s *SlackRequest) ReportCheck(manifests []model.Inventory) *SlackRequest {
 
 		ReportBlock := Block{
 			Type: "section",
-			Fields: []Field{
-				{
-					Type: "mrkdwn",
-					Text: fmt.Sprintf("\n %v. https://%v | expired upon days", number, v.Domainname),
-				},
+			Text: &Text{
+				Type: "mrkdwn",
+				Text: fmt.Sprintf("\n %v. https://%v | expired upon *%v* days", number, v.Domainname, v.Remainingdays),
 			},
 		}
 		number = number + 1

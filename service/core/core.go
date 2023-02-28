@@ -12,11 +12,15 @@ import (
 	"time"
 )
 
-func SSLExpireCheck(manifests []model.Inventory) map[string]model.Expiry_data {
+func SSLExpireCheck(manifests []model.Inventory) (list []model.ExpiryData) {
 	slack := notification.New("Job: the SSL checker are sucessfully done checking sir! here are the result :") // init slack notification
-	report := 0
-	list := make(map[string]model.Expiry_data)
-	// var dataset []Data_inventory
+
+	// list := make(map[string]model.ExpiryData)
+	var (
+		// Datapool    []model.ExpiryData
+		report      int = 0
+		currenttime     = time.Now()
+	)
 
 	for _, v := range manifests {
 		//debug domain name
@@ -40,7 +44,7 @@ func SSLExpireCheck(manifests []model.Inventory) map[string]model.Expiry_data {
 
 		cert := client.ConnectionState().PeerCertificates[0]
 		expireddate := cert.NotAfter.Format(time.RFC3339)
-		currenttime := time.Now()
+
 		expiredelta := cert.NotAfter.Sub(currenttime)
 		deltainteger := int(expiredelta.Hours() / 24)
 
@@ -54,11 +58,17 @@ func SSLExpireCheck(manifests []model.Inventory) map[string]model.Expiry_data {
 			notification.RemindUpdate(v.Domainname)
 			report = report + 1
 		}
-		list[v.Domainname] = model.Expiry_data{
+		// list[v.Domainname] = model.ExpiryData{
+		// 	Domainname:    v.Domainname,
+		// 	Expireddate:   expireddate,
+		// 	Remainingdays: deltainteger,
+		// }
+
+		list = append(list, model.ExpiryData{
 			Domainname:    v.Domainname,
 			Expireddate:   expireddate,
 			Remainingdays: deltainteger,
-		}
+		})
 
 		//nyimpen data ke formatting struct
 		// input := model.Expiry_data{
@@ -70,7 +80,7 @@ func SSLExpireCheck(manifests []model.Inventory) map[string]model.Expiry_data {
 		// dataset.
 
 	}
-	slack.SetStatus(nil).ReportCheck(manifests).Send()
+	slack.SetStatus(nil).ReportCheck(list).Send()
 
 	fmt.Printf("we got %v reports of near expired domain \n", report)
 
