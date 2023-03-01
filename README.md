@@ -9,4 +9,4 @@ output :
 how to use :
 1. create manifest.yml inside /inventory/manifest.yml
 2. mount your inventory folder if you had to in your deployment yml
-3. hit all the endpoint in the router/router,go files
+3. hit all the endpoint in the router/router.go files
