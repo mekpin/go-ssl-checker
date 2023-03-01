@@ -8,14 +8,15 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/rs/zerolog/log"
 )
 
 func init() {
 	if config.Common.Enablecron == "true" {
 		cron.Routine()
-		fmt.Println("cron are enabled")
+		log.Info().Str("message", "cron are enabled").Send()
 	} else {
-		fmt.Println("cron are disabled")
+		log.Info().Str("message", "cron are disabled").Send()
 	}
 }
 

@@ -6,10 +6,11 @@ import (
 	"go-ssl-checker/config"
 	"go-ssl-checker/model"
 	"go-ssl-checker/service/notification"
-	"log"
 	"net"
 	"strconv"
 	"time"
+
+	"github.com/rs/zerolog/log"
 )
 
 func SSLExpireCheck(manifests []model.Inventory) (list []model.ExpiryData) {
@@ -28,8 +29,7 @@ func SSLExpireCheck(manifests []model.Inventory) (list []model.ExpiryData) {
 
 		conn, err := net.Dial("tcp", v.Domainname+":"+v.Domainport)
 		if err != nil {
-			fmt.Println("error while netdial tcp in file controller/sslcheck.go")
-			log.Fatal(err)
+			log.Fatal().Str("message", "error while netdial tcp in file controller/sslcheck.go").Send()
 		}
 
 		client := tls.Client(conn, &tls.Config{
@@ -38,8 +38,7 @@ func SSLExpireCheck(manifests []model.Inventory) (list []model.ExpiryData) {
 		defer client.Close()
 
 		if err := client.Handshake(); err != nil {
-			fmt.Println("error while client handshake in file controller/sslcheck.go")
-			log.Fatal(err)
+			log.Fatal().Str("message", "error while client handshake in file controller/sslcheck.go").Send()
 		}
 
 		cert := client.ConnectionState().PeerCertificates[0]
@@ -51,8 +50,7 @@ func SSLExpireCheck(manifests []model.Inventory) (list []model.ExpiryData) {
 		//ubah env threshold jadi int untuk compare
 		intthreshold, err := strconv.Atoi(config.Common.Threshold)
 		if err != nil {
-			fmt.Println("error while changing env threshold string to int in file controller/sslcheck.go")
-			log.Fatal(err)
+			log.Fatal().Str("message", "error while changing env threshold string to int in file controller/sslcheck.go").Send()
 		}
 
 		// list[v.Domainname] = model.ExpiryData{
