@@ -14,7 +14,7 @@ import (
 
 func SSLExpireCheck(manifests []model.Inventory) (list []model.ExpiryData) {
 	slack := notification.New("Job: the SSL checker are sucessfully done checking sir! here are the result :") // init slack notification
-
+	slack2 := notification.New(":rotating_light: *reminder to update the SSL* :rotating_light:")
 	// list := make(map[string]model.ExpiryData)
 	var (
 		// Datapool    []model.ExpiryData
@@ -54,10 +54,7 @@ func SSLExpireCheck(manifests []model.Inventory) (list []model.ExpiryData) {
 			fmt.Println("error while changing env threshold string to int in file controller/sslcheck.go")
 			log.Fatal(err)
 		}
-		if deltainteger < intthreshold {
-			notification.RemindUpdate(v.Domainname)
-			report = report + 1
-		}
+
 		// list[v.Domainname] = model.ExpiryData{
 		// 	Domainname:    v.Domainname,
 		// 	Expireddate:   expireddate,
@@ -70,14 +67,12 @@ func SSLExpireCheck(manifests []model.Inventory) (list []model.ExpiryData) {
 			Remainingdays: deltainteger,
 		})
 
-		//nyimpen data ke formatting struct
-		// input := model.Expiry_data{
-		// 	Domainname:    v.Domainname,
-		// 	Expireddate:   expireddate,
-		// 	Remainingdays: deltainteger,
-		// }
+		// remind if remaining days are less than the threshold env.
 
-		// dataset.
+		if deltainteger < intthreshold {
+			slack2.ReminderSlack(v.Domainname, deltainteger).Send()
+			report = report + 1
+		}
 
 	}
 	slack.SetStatus(nil).ReportCheck(list).Send()

@@ -40,16 +40,6 @@ type Block struct {
 	Fields   []Field `json:"fields,omitempty"`
 }
 
-func DailyCheckNotification() {
-	jalanjam := time.Now()
-	fmt.Println("running ssl daily check on " + jalanjam.String())
-	SlackDaily()
-}
-
-func SlackDaily() {
-
-}
-
 // mandatory, first position
 func New(headerText string) *SlackRequest {
 
@@ -127,7 +117,7 @@ func (s *SlackRequest) SetStatus(err error) *SlackRequest {
 	}
 }
 
-// mandatory, third position
+// optional, third position
 func (s *SlackRequest) ReportCheck(manifests []model.ExpiryData) *SlackRequest {
 	InformationBlock := Block{
 		Type: "section",
@@ -159,6 +149,28 @@ func (s *SlackRequest) ReportCheck(manifests []model.ExpiryData) *SlackRequest {
 		number = number + 1
 		s.Attachments[0].Blocks = append(s.Attachments[0].Blocks, ReportBlock)
 	}
+	return s
+}
+
+// optional, third position notify ssl need to be updated
+func (s *SlackRequest) ReminderSlack(domain string, life_days int) *SlackRequest {
+
+	//add divider
+	Spacer := Block{
+		Type: "divider",
+	}
+
+	s.Attachments[0].Blocks = append(s.Attachments[0].Blocks, Spacer)
+
+	ReportBlock := Block{
+		Type: "section",
+		Text: &Text{
+			Type: "mrkdwn",
+			Text: fmt.Sprintf("\n *ALERT* <!channel> \n please update the SSL of https://%v as it will expire in *%v* days", domain, life_days),
+		},
+	}
+	s.Attachments[0].Blocks = append(s.Attachments[0].Blocks, ReportBlock)
+
 	return s
 }
 

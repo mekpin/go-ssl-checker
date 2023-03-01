@@ -8,7 +8,7 @@ import (
 type common struct {
 	Port          string `env:"PORT" envDefault:"3300"`
 	Alldomainport string `env:"DOMAIN_PORT" envDefault:"443"`
-	Threshold     string `env:"THRESHOLD" envDefault:"25"`
+	Threshold     string `env:"THRESHOLD" envDefault:"300"`
 	Croninterval  string `env:"CRON_INTERVAL" envDefault:"daily"`
 	Slackwebhook  string `env:"SLACK_WEBHOOK" envDefault:""`
 }
