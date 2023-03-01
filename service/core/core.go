@@ -13,8 +13,8 @@ import (
 )
 
 func SSLExpireCheck(manifests []model.Inventory) (list []model.ExpiryData) {
-	slack := notification.New("Job: the SSL checker are sucessfully done checking sir! here are the result :") // init slack notification
-	slack2 := notification.New(":rotating_light: *reminder to update the SSL* :rotating_light:")
+	slackdaily := notification.New("the SSL checker are sucessfully done checking sir! here are the result :") // init slack notification
+	slackreminder := notification.New(":rotating_light: *reminder to update the SSL* :rotating_light:")
 	// list := make(map[string]model.ExpiryData)
 	var (
 		// Datapool    []model.ExpiryData
@@ -70,12 +70,12 @@ func SSLExpireCheck(manifests []model.Inventory) (list []model.ExpiryData) {
 		// remind if remaining days are less than the threshold env.
 
 		if deltainteger < intthreshold {
-			slack2.ReminderSlack(v.Domainname, deltainteger).Send()
+			slackreminder.ReminderSlack(v.Domainname, deltainteger).Send()
 			report = report + 1
 		}
 
 	}
-	slack.SetStatus(nil).ReportCheck(list).Send()
+	slackdaily.SetStatus(nil).ReportCheck(list).Send()
 
 	fmt.Printf("we got %v reports of near expired domain \n", report)
 
