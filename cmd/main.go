@@ -11,7 +11,12 @@ import (
 )
 
 func init() {
-	cron.Routine()
+	if config.Common.Enablecron == "true" {
+		cron.Routine()
+		fmt.Println("cron are enabled")
+	} else {
+		fmt.Println("cron are disabled")
+	}
 }
 
 func main() {

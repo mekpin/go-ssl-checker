@@ -21,9 +21,3 @@ func SSLCheck(c *gin.Context) {
 	output := core.SSLExpireCheck(manifests)
 	c.JSON(http.StatusOK, output)
 }
-
-func SSLList(c *gin.Context) {
-	c.JSON(http.StatusOK, gin.H{
-		"message": "ssl list is reachable",
-	})
-}

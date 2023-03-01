@@ -19,14 +19,12 @@ func Router(app *gin.Engine) {
 	app.GET("/", controller.BaseHealthcheck)
 
 	app.GET("/health", controller.Healthcheck)
-	app.GET("/domainlist", controller.DomainList)
 
 	baseGroup := app.Group("/")
 
 	checkGroup := baseGroup.Group("/check")
 	{
 		checkGroup.GET("/", controller.SSLCheck)
-		checkGroup.GET("/list", controller.SSLList)
 	}
 
 	manifestGroup := baseGroup.Group("/manifest")
