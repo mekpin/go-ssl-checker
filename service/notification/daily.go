@@ -48,7 +48,7 @@ func New(headerText string) *SlackRequest {
 		Elements: []Field{
 			{
 				Type: "mrkdwn",
-				Text: fmt.Sprintf("Executed at: %v", time.Now().Format(time.RFC3339)),
+				Text: fmt.Sprintf("Executed at: %v", time.Now().Format(config.Common.TimeFormat)),
 			},
 		},
 	}
@@ -97,7 +97,7 @@ func (s *SlackRequest) SetStatus(err error) *SlackRequest {
 		Elements: []Field{
 			{
 				Type: "mrkdwn",
-				Text: fmt.Sprintf("Finished at: %v", time.Now().Format(time.RFC3339)),
+				Text: fmt.Sprintf("Finished at: %v", time.Now().Format(config.Common.TimeFormat)),
 			},
 		},
 	}
@@ -135,7 +135,7 @@ func (s *SlackRequest) ReportCheck(manifests []model.ExpiryData) *SlackRequest {
 		Type: "divider",
 	}
 
-	number := 1
+	numbercounter := 1
 	for _, v := range manifests {
 		s.Attachments[0].Blocks = append(s.Attachments[0].Blocks, Spacer)
 
@@ -143,34 +143,59 @@ func (s *SlackRequest) ReportCheck(manifests []model.ExpiryData) *SlackRequest {
 			Type: "section",
 			Text: &Text{
 				Type: "mrkdwn",
-				Text: fmt.Sprintf("\n %v. https://%v | expired upon *%v* days", number, v.Domainname, v.Remainingdays),
+				Text: fmt.Sprintf("\n %v. https://%v | expired upon *%v* days, *(%v)*", numbercounter, v.Domainname, v.Remainingdays, v.Expireddate),
 			},
 		}
-		number = number + 1
+		numbercounter = numbercounter + 1
 		s.Attachments[0].Blocks = append(s.Attachments[0].Blocks, ReportBlock)
 	}
 	return s
 }
 
 // optional, third position notify ssl need to be updated
-func (s *SlackRequest) ReminderSlack(domain string, life_days int) *SlackRequest {
-
+func (s *SlackRequest) ReminderSlack(manifestsunderthreshold []model.ExpiryData) *SlackRequest {
+	numbercounter := 1
 	//add divider
 	Spacer := Block{
 		Type: "divider",
 	}
+	for _, v := range manifestsunderthreshold {
 
-	s.Attachments[0].Blocks = append(s.Attachments[0].Blocks, Spacer)
+		s.Attachments[0].Blocks = append(s.Attachments[0].Blocks, Spacer)
 
-	ReportBlock := Block{
-		Type: "section",
-		Text: &Text{
-			Type: "mrkdwn",
-			Text: fmt.Sprintf("\n *ALERT* <!channel> \n please update the SSL of https://%v as it will expire in *%v* days", domain, life_days),
-		},
+		ReportBlock := Block{
+			Type: "section",
+			Text: &Text{
+				Type: "mrkdwn",
+				Text: fmt.Sprintf("\n %v. please update the SSL of https://%v as it will expire in *%v* days", numbercounter, v.Domainname, v.Remainingdays),
+			},
+		}
+		numbercounter = numbercounter + 1
+		s.Attachments[0].Blocks = append(s.Attachments[0].Blocks, ReportBlock)
 	}
-	s.Attachments[0].Blocks = append(s.Attachments[0].Blocks, ReportBlock)
+	return s
+}
 
+func (s *SlackRequest) ErrorReportSlack(manifesterror []model.ExpiryData) *SlackRequest {
+	numbercounter := 1
+	//add divider
+	Spacer := Block{
+		Type: "divider",
+	}
+	for _, v := range manifesterror {
+
+		s.Attachments[0].Blocks = append(s.Attachments[0].Blocks, Spacer)
+
+		ReportBlock := Block{
+			Type: "section",
+			Text: &Text{
+				Type: "mrkdwn",
+				Text: fmt.Sprintf("\n %v. please check the connection to or the manifest of https://%v | we countered an error", numbercounter, v.Domainname),
+			},
+		}
+		numbercounter = numbercounter + 1
+		s.Attachments[0].Blocks = append(s.Attachments[0].Blocks, ReportBlock)
+	}
 	return s
 }
 

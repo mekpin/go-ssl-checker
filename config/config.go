@@ -6,11 +6,13 @@ import (
 )
 
 type common struct {
-	Port         string `env:"PORT" envDefault:"3300"`
-	Threshold    string `env:"THRESHOLD" envDefault:"30"`
-	Croninterval string `env:"CRON_INTERVAL" envDefault:"daily"`
-	Slackwebhook string `env:"SLACK_WEBHOOK" envDefault:""`
-	Enablecron   string `env:"ENABLE_CRON" envDefault:"false"`
+	Port          string `env:"PORT" envDefault:"3300"`
+	Threshold     string `env:"THRESHOLD" envDefault:"30"`
+	Croninterval  string `env:"CRON_INTERVAL" envDefault:"daily"`
+	Slackwebhook  string `env:"SLACK_WEBHOOK" envDefault:""`
+	Enablecron    string `env:"ENABLE_CRON" envDefault:"false"`
+	TimeFormat    string `env:"TIME_FORMAT" envDefault:"15:04:05 MST 02 Jan 2006"`
+	LocalLocation string `env:"TIME_FORMAT" envDefault:"Asia/Jakarta"`
 }
 
 type manifest struct {

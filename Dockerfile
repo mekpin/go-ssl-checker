@@ -19,4 +19,4 @@ RUN mkdir /dump
 
 ENV TZ=Asia/Jakarta
 
-ENTRYPOINT ["/app", "--dns", "8.8.8.8"]
+ENTRYPOINT ["/app", "--network", "host"]

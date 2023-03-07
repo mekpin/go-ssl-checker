@@ -8,7 +8,7 @@ import (
 
 func Healthcheck(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
-		"message": "golang service is alive",
+		"message": "go-ssl-checker service is alive",
 	})
 }
 

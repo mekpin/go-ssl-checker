@@ -14,22 +14,29 @@ import (
 )
 
 func SSLExpireCheck(manifests []model.Inventory) (list []model.ExpiryData) {
-	slackdaily := notification.New("the SSL checker are sucessfully done checking sir! here are the result :") // init slack notification
-	slackreminder := notification.New(":rotating_light: *reminder to update the SSL* :rotating_light:")
+	slackdaily := notification.New("the *SSL checker* are done checking my lord! here are the results :") // init slack notification
+	slackreminder := notification.New(":rotating_light: *reminder to update the SSL* :rotating_light: \n *ALERT* <!channel>")
+	slackerrornotify := notification.New(":warning: *reminder to check the manifest / connectivity*  :warning: \n  <!channel>")
+
 	// list := make(map[string]model.ExpiryData)
 	var (
 		// Datapool    []model.ExpiryData
-		report      int = 0
-		currenttime     = time.Now()
+		report       int = 0
+		errorreport  int = 0
+		currenttime      = time.Now()
+		reminderlist []model.ExpiryData
+		errorlist    []model.ExpiryData
 	)
 
 	for _, v := range manifests {
-		//debug domain name
+		//debug domain name iteration
 		fmt.Println("running check on : " + v.Domainname)
 
-		conn, err := net.Dial("tcp", v.Domainname+":"+v.Domainport)
+		d := net.Dialer{Timeout: time.Second * 5}
+		conn, err := d.Dial("tcp", v.Domainname+":"+v.Domainport)
 		if err != nil {
-			log.Fatal().Str("message", "error while netdial tcp in file controller/sslcheck.go").Send()
+			log.Info().Str("message", "error while netdial tcp in file controller/sslcheck.go skipping loop").Send()
+			errorreport = errorreport + 1
 		}
 
 		client := tls.Client(conn, &tls.Config{
@@ -38,44 +45,69 @@ func SSLExpireCheck(manifests []model.Inventory) (list []model.ExpiryData) {
 		defer client.Close()
 
 		if err := client.Handshake(); err != nil {
-			log.Fatal().Str("message", "error while client handshake in file controller/sslcheck.go").Send()
-		}
+			log.Info().Str("message", "error while client handshake for  in file controller/sslcheck.gob skipping this loop").Send()
 
-		cert := client.ConnectionState().PeerCertificates[0]
-		expireddate := cert.NotAfter.Format(time.RFC3339)
+			errorreport = errorreport + 1
 
-		expiredelta := cert.NotAfter.Sub(currenttime)
-		deltainteger := int(expiredelta.Hours() / 24)
+			list = append(list, model.ExpiryData{
+				Domainname:    v.Domainname,
+				Expireddate:   "error_found",
+				Remainingdays: -50000,
+			})
 
-		//ubah env threshold jadi int untuk compare
-		intthreshold, err := strconv.Atoi(config.Common.Threshold)
-		if err != nil {
-			log.Fatal().Str("message", "error while changing env threshold string to int in file controller/sslcheck.go").Send()
-		}
+			errorlist = append(reminderlist, model.ExpiryData{
+				Domainname:    v.Domainname,
+				Expireddate:   "error_found",
+				Remainingdays: -50000,
+			})
 
-		// list[v.Domainname] = model.ExpiryData{
-		// 	Domainname:    v.Domainname,
-		// 	Expireddate:   expireddate,
-		// 	Remainingdays: deltainteger,
-		// }
+		} else {
+			wib, _ := time.LoadLocation(config.Common.LocalLocation)
 
-		list = append(list, model.ExpiryData{
-			Domainname:    v.Domainname,
-			Expireddate:   expireddate,
-			Remainingdays: deltainteger,
-		})
+			cert := client.ConnectionState().PeerCertificates[0]
+			expireddate := cert.NotAfter.In(wib).Format(config.Common.TimeFormat)
 
-		// remind if remaining days are less than the threshold env.
+			expiredelta := cert.NotAfter.Sub(currenttime)
+			deltainteger := int(expiredelta.Hours() / 24)
 
-		if deltainteger < intthreshold {
-			slackreminder.ReminderSlack(v.Domainname, deltainteger).Send()
-			report = report + 1
+			list = append(list, model.ExpiryData{
+				Domainname:    v.Domainname,
+				Expireddate:   expireddate,
+				Remainingdays: deltainteger,
+			})
+
+			// remind if remaining days are less than the threshold env.
+
+			//ubah env threshold jadi int untuk compare
+			intthreshold, err := strconv.Atoi(config.Common.Threshold)
+			if err != nil {
+				log.Info().Str("message", "error while changing env threshold string to int in file controller/sslcheck.go skipping out of loop").Send()
+				errorreport = errorreport + 1
+
+			}
+
+			if deltainteger < intthreshold {
+				reminderlist = append(reminderlist, model.ExpiryData{
+					Domainname:    v.Domainname,
+					Expireddate:   expireddate,
+					Remainingdays: deltainteger,
+				})
+				report = report + 1
+			}
+
 		}
 
 	}
-	slackdaily.SetStatus(nil).ReportCheck(list).Send()
 
+	slackdaily.ReportCheck(list).Send()
+	if reminderlist != nil {
+		slackreminder.ReminderSlack(reminderlist).Send()
+	}
+	if errorlist != nil {
+		slackerrornotify.ErrorReportSlack(errorlist).Send()
+	}
 	fmt.Printf("we got %v reports of near expired domain \n", report)
+	fmt.Printf("we got %v error report while SSLcheck \n", errorreport)
 
 	return list
 
