@@ -11,3 +11,12 @@ how to use :
 2. Mount your inventory folder if you had to in your deployment yml
 3. you can test to hit all the endpoint in the router/router.go files, its all a harmless get API method
 4. run it in your instance for daily reminder
+
+list of ENV
+PORT > envDefault:"3300"`
+THRESHOLD > envDefault:"30"`
+CRON_INTERVAL > envDefault:"daily"`
+SLACK_WEBHOOK > envDefault:""`
+ENABLE_CRON > envDefault:"false"`
+TIME_FORMAT > envDefault:"15:04:05 MST 02 Jan 2006"`
+TIME_FORMAT > envDefault:"Asia/Jakarta"`
