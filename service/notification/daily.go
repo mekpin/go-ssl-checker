@@ -143,7 +143,7 @@ func (s *SlackRequest) ReportCheck(manifests []model.ExpiryData) *SlackRequest {
 			Type: "section",
 			Text: &Text{
 				Type: "mrkdwn",
-				Text: fmt.Sprintf("\n %v. https://%v | expired upon *%v* days, *(%v)*", numbercounter, v.Domainname, v.Remainingdays, v.Expireddate),
+				Text: fmt.Sprintf("\n %v. https://%v:%v | expired upon *%v* days, *(%v)*", numbercounter, v.Domainname, v.Domainport, v.Remainingdays, v.Expireddate),
 			},
 		}
 		numbercounter = numbercounter + 1
@@ -153,12 +153,21 @@ func (s *SlackRequest) ReportCheck(manifests []model.ExpiryData) *SlackRequest {
 }
 
 // optional, third position notify ssl need to be updated
-func (s *SlackRequest) ReminderSlack(manifestsunderthreshold []model.ExpiryData) *SlackRequest {
+func (s *SlackRequest) ReminderSlack(manifestsunderthreshold []model.ReminderData) *SlackRequest {
 	numbercounter := 1
 	//add divider
 	Spacer := Block{
 		Type: "divider",
 	}
+	InformationBlock := Block{
+		Type: "section",
+		Text: &Text{
+			Type: "mrkdwn",
+			Text: "*please update the cert/pem on server :*\n",
+		},
+	}
+	s.Attachments[0].Blocks = append(s.Attachments[0].Blocks, InformationBlock)
+
 	for _, v := range manifestsunderthreshold {
 
 		s.Attachments[0].Blocks = append(s.Attachments[0].Blocks, Spacer)
@@ -167,7 +176,7 @@ func (s *SlackRequest) ReminderSlack(manifestsunderthreshold []model.ExpiryData)
 			Type: "section",
 			Text: &Text{
 				Type: "mrkdwn",
-				Text: fmt.Sprintf("\n %v. please update the SSL of https://%v as it will expire in *%v* days", numbercounter, v.Domainname, v.Remainingdays),
+				Text: fmt.Sprintf("\n %v.  *%v*, the SSL of https://%v:%v will expire in *%v* days", numbercounter, v.Servername, v.Domainname, v.Domainport, v.Remainingdays),
 			},
 		}
 		numbercounter = numbercounter + 1
@@ -182,6 +191,16 @@ func (s *SlackRequest) ErrorReportSlack(manifesterror []model.ExpiryData) *Slack
 	Spacer := Block{
 		Type: "divider",
 	}
+	//add pre information
+	InformationBlock := Block{
+		Type: "section",
+		Text: &Text{
+			Type: "mrkdwn",
+			Text: "*Please check the connection or the manifest of :*\n",
+		},
+	}
+	s.Attachments[0].Blocks = append(s.Attachments[0].Blocks, InformationBlock)
+
 	for _, v := range manifesterror {
 
 		s.Attachments[0].Blocks = append(s.Attachments[0].Blocks, Spacer)
@@ -190,7 +209,7 @@ func (s *SlackRequest) ErrorReportSlack(manifesterror []model.ExpiryData) *Slack
 			Type: "section",
 			Text: &Text{
 				Type: "mrkdwn",
-				Text: fmt.Sprintf("\n %v. please check the connection to or the manifest of https://%v | we countered an error", numbercounter, v.Domainname),
+				Text: fmt.Sprintf("\n %v.  https://%v port *%v*", numbercounter, v.Domainname, v.Domainport),
 			},
 		}
 		numbercounter = numbercounter + 1

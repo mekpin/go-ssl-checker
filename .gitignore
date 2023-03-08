@@ -2,4 +2,3 @@
 # vendor/
 .env
 inventory/manifest*
-.github

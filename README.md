@@ -20,3 +20,4 @@ SLACK_WEBHOOK > envDefault:""`
 ENABLE_CRON > envDefault:"false"`
 TIME_FORMAT > envDefault:"15:04:05 MST 02 Jan 2006"`
 TIME_FORMAT > envDefault:"Asia/Jakarta"`
+MANIFEST_PATH > envDefault:"inventory/manifestSSL.yaml"`

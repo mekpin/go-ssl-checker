@@ -16,7 +16,7 @@ type common struct {
 }
 
 type manifest struct {
-	InventoryPath string `env:"MANIFEST_PATH" envDefault:"inventory/manifest.yaml"`
+	InventoryPath string `env:"MANIFEST_PATH" envDefault:"inventory/manifestSSL.yaml"`
 }
 
 var (
